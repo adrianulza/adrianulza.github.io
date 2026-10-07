@@ -4,7 +4,7 @@ Lecturer in Structural Engineering at the Department of Civil Engineering, Unive
 
 I build open tools for earthquake and disaster risk.
 
-**Website:** [adrianulza.github.io/adrianulza](https://adrianulza.github.io/adrianulza/)
+**Website:** [adrianulza.github.io](https://adrianulza.github.io/)
 
 ## Research interests
 
