@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en" data-root="" data-mode="ulzanism">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Adrian Ulza</title>
+  <meta name="description" content="Adrian Ulza, structural engineer in Banda Aceh. Lecturer at Universitas Syiah Kuala and researcher at TDMRC, building open tools for earthquake and disaster risk.">
+  <meta name="theme-color" content="#231f20">
+  <meta property="og:title" content="Adrian Ulza">
+  <meta property="og:description" content="Structural engineer in Banda Aceh. Lecturer at Universitas Syiah Kuala, researcher at TDMRC.">
+  <meta property="og:type" content="website">
+  <script>
+    document.documentElement.classList.add('js');
+    setTimeout(function () { if (!window.__booted) document.documentElement.classList.remove('js'); }, 5000);
+  </script>
+  <style>html,body{background:#231f20}html[data-mode=light],html[data-mode=light] body{background:#e9ebec}.js #fallback{visibility:hidden}</style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23231f20'/%3E%3Ctext x='32' y='44' font-family='Futura,Jost,sans-serif' font-size='34' font-weight='300' text-anchor='middle' fill='%23fff'%3EA/%3C/text%3E%3Ccircle cx='50' cy='16' r='5' fill='none' stroke='%23ef4f4a' stroke-width='2.6'/%3E%3C/svg%3E">
+  <script type="module" src="./src/main.js"></script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <canvas id="hud" aria-hidden="true"></canvas>
+
+  <div id="app" hidden>
+    <h1 class="sr-only">Adrian Ulza, structural engineer</h1>
+    <!-- Shown for the first moments, before the 3D scene is ready: the nucleus,
+         drawn in SVG at the exact spot where the 3D core will appear. -->
+    <div class="nucleus" aria-hidden="true">
+      <svg viewBox="-110 -110 220 220">
+        <circle class="n-halo" r="52"/>
+        <circle class="n-ring n-r1" r="78"/>
+        <circle class="n-ring n-r2" r="105"/>
+        <circle class="n-arc n-a1" r="91" pathLength="100"/>
+        <circle class="n-arc n-a2" r="105" pathLength="100"/>
+        <circle class="n-disc" r="22.5"/>
+        <circle class="n-dot" r="4.5"/>
+      </svg>
+    </div>
+    <div class="lead">
+      <div class="title" aria-hidden="true"><p class="small">Structural engineer · Banda Aceh</p></div>
+      <p class="thesis">Open tools for earthquake and disaster risk.</p>
+      <nav class="works" aria-label="Selected work">
+        <ol class="worklist" data-worklist></ol>
+      </nav>
+    </div>
+    <div id="overlay" class="overlay" role="navigation" aria-label="Network"></div>
+    <aside id="panel" class="panel" aria-live="polite" hidden></aside>
+    <div class="veil" data-veil></div>
+  </div>
+
+  <main id="fallback" class="fallback">
+    
+  <header class="fb-head">
+    <p class="fb-kind">Structural engineer · Banda Aceh, Indonesia</p>
+    <h1>Adrian Ulza</h1>
+    <p>Ir. Adrian Ulza, S.T., M.Sc.</p>
+    <ul class="fb-roles"><li><strong>Lecturer in Structural Engineering</strong>, Department of Civil Engineering, Universitas Syiah Kuala</li><li><strong>Researcher</strong>, Tsunami and Disaster Mitigation Research Center (TDMRC)</li></ul>
+    <h2>Interests</h2>
+    <ul class="fb-interests"><li>Performance-based seismic design</li><li>Seismic fragility and vulnerability</li><li>Structural health monitoring</li><li>Machine learning for seismic risk</li><li>Open engineering software</li></ul>
+    <p class="fb-links"><a href="mailto:adrian_ulza@usk.ac.id">Email</a><a href="https://scholar.google.com/citations?user=nGB_HtQAAAAJ" target="_blank" rel="noopener">Google Scholar</a><a href="https://www.linkedin.com/in/adrianulza/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/adrianulza" target="_blank" rel="noopener">GitHub</a></p>
+  </header>
+  <section aria-labelledby="fb-work-h">
+    <h2 id="fb-work-h">Selected work</h2>
+    <ol class="fb-works">
+    <li class="fb-work">
+      <span class="fb-idx">01</span>
+      <div>
+        <h3>ASFRAVA-B</h3>
+        <p class="fb-kind">Research software · 2025</p>
+        <p>A free Windows app that turns a pushover curve and a set of ground motions into seismic fragility and vulnerability curves.</p>
+        <p class="fb-links"><a href="https://doi.org/10.1016/j.ijdrr.2025.105679" target="_blank" rel="noopener">Paper</a><a href="https://github.com/adrianulza/ASFRAVA-B" target="_blank" rel="noopener">Code</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">02</span>
+      <div>
+        <h3>OpenAnstruk</h3>
+        <p class="fb-kind">Software · 2026</p>
+        <p>Structural analysis and design in the browser. Free, open, and no install.</p>
+        <p class="fb-links"><a href="https://openanstruk.org" target="_blank" rel="noopener">Open the app</a><a href="https://github.com/adrianulza/OpenANSTRUK-2D" target="_blank" rel="noopener">Code</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">03</span>
+      <div>
+        <h3>SIM-GEUMPA</h3>
+        <p class="fb-kind">Instrument · 2026</p>
+        <p>A uni-axial shaking table that replays real earthquakes. Geumpa is Acehnese for earthquake.</p>
+        <p class="fb-links"><a href="https://github.com/adrianulza/SIM-GEUMPA" target="_blank" rel="noopener">Code</a><a href="https://tdmrc.usk.ac.id/2026/06/08/researchers-from-tdmrc-usk-develop-sim-geumpa-an-in-house-earthquake-simulator-as-a-milestone-in-infrastructure-resilience-research" target="_blank" rel="noopener">News</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">04</span>
+      <div>
+        <h3>supeRISKa lite</h3>
+        <p class="fb-kind">Risk model · 2025</p>
+        <p>Decision support for disaster risk financing: earthquake and tsunami losses to public buildings.</p>
+        <p class="fb-links"><a href="https://tdmrc.usk.ac.id/2025/10/30/tdmrc-usk-held-a-workshop-on-the-utilization-of-superiska-and-building-database-for-disaster-management-in-banda-aceh-as-part-of-the-in-saintek-2025-program/" target="_blank" rel="noopener">Workshop</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">05</span>
+      <div>
+        <h3>Siaga Banjir</h3>
+        <p class="fb-kind">Game · 2026</p>
+        <p>A browser game that teaches families to prepare for, survive and recover from floods.</p>
+        <p class="fb-links"><a href="https://adrianulza.github.io/game-siaga-banjir/" target="_blank" rel="noopener">Play</a><a href="https://github.com/adrianulza/game-siaga-banjir" target="_blank" rel="noopener">Code</a></p>
+      </div>
+    </li></ol>
+  </section>
+  <section aria-labelledby="fb-pub-h">
+    <h2 id="fb-pub-h">Publications</h2>
+    <ol class="fb-works">
+    <li class="fb-work">
+      <span class="fb-idx">2025</span>
+      <div>
+        <h3>Automated Seismic Fragility and Vulnerability Assessment for Buildings (ASFRAVA-B): Integrating Probabilistic Seismic Design into Performance-Based Engineering Practices</h3>
+        <p class="fb-kind">International Journal of Disaster Risk Reduction 127, 105679</p>
+        <p>A. Ulza, Y. Idris, M. A. Ramadhan, Syamsidik, Z. Amalia</p>
+        <p class="fb-links"><a href="https://doi.org/10.1016/j.ijdrr.2025.105679" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2025</span>
+      <div>
+        <h3>Analisis Respons Spektrum: State-of-the-Art dan Pengembangan Kerangka Pemrograman untuk Komputasi</h3>
+        <p class="fb-kind">Jurnal Teknik Sipil 14(1), 23-32</p>
+        <p>A. Ulza, M. Afifuddin, T. B. Aulia, H. Huzaim, A. Abdullah</p>
+        <p class="fb-links"><a href="https://doi.org/10.24815/jts.v14i1.44764" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2025</span>
+      <div>
+        <h3>Pengaruh Pemodelan Soil-Structure Interaction pada Kinerja Struktur: Studi Kasus Tipologi Bangunan Sekolah Indonesia</h3>
+        <p class="fb-kind">Jurnal Teknik Sipil dan Teknologi Konstruksi 11(1)</p>
+        <p>A. Ulza, H. Yunita, Y. Idris, R. S. Faradiba</p>
+        <p class="fb-links"><a href="https://doi.org/10.35308/jts-utu.v11i1.11549" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2025</span>
+      <div>
+        <h3>Concrete Jacketing for Strength Enhancement of Square Columns in Corroded Reinforced Concrete Structures</h3>
+        <p class="fb-kind">TEKNIK 46(3), 270-278</p>
+        <p>Z. Amalia, Mahlil, A. Ulza, T. Saidi, T. B. Aulia, C. N. Asyifa</p>
+        <p class="fb-links"><a href="https://doi.org/10.14710/teknik.v46i3.70449" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2025</span>
+      <div>
+        <h3>Reviewing the Earthquake Performance of Typical Confined Masonry Residential Houses in Aceh</h3>
+        <p class="fb-kind">Springer Proceedings in Earth and Environmental Sciences (AIWEST 2022), 271-288</p>
+        <p>A. Ulza, Y. Idris, Y. Hayati, Mahlil</p>
+        <p class="fb-links"><a href="https://doi.org/10.1007/978-3-031-81072-5_18" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2024</span>
+      <div>
+        <h3>Integrating Building Information Modelling (BIM) for Improved Assessment and Seismic Evaluation of Existing Buildings: A Case Study</h3>
+        <p class="fb-kind">Journal of Physics: Conference Series 2916, 012022</p>
+        <p>A. Ulza, P. A. Kesuma, I. S. Hilal, A. Rahmad, T. A. Cut Fatmawati, J. Ardika, I. Meilinda</p>
+        <p class="fb-links"><a href="https://doi.org/10.1088/1742-6596/2916/1/012022" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2023</span>
+      <div>
+        <h3>Closing the Resilience Gap: A Preliminary Study on Establishing the National Fragility Curve Catalog for Multi-Hazard Assessment in Indonesia</h3>
+        <p class="fb-kind">E3S Web of Conferences 447, 01002</p>
+        <p>A. Ulza, Y. Idris, C. N. Asyifa, R. Irvansyah</p>
+        <p class="fb-links"><a href="https://doi.org/10.1051/e3sconf/202344701002" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx">2022</span>
+      <div>
+        <h3>Earthquake Vulnerability Assessment of the 6.5 Mw Pidie Jaya Earthquake: Analytical-Based Fragility Curves</h3>
+        <p class="fb-kind">E3S Web of Conferences 340, 02008</p>
+        <p>A. Ulza, Y. Idris</p>
+        <p class="fb-links"><a href="https://doi.org/10.1051/e3sconf/202234002008" target="_blank" rel="noopener">Paper</a></p>
+      </div>
+    </li></ol>
+  </section>
+  <section aria-labelledby="fb-book-h">
+    <h2 id="fb-book-h">Books</h2>
+    <ol class="fb-works">
+    <li class="fb-work">
+      <span class="fb-idx">2021</span>
+      <div>
+        <h3>Teori dan Praktik Evaluasi Struktur Beton Bertulang Berbasis Desain Kinerja</h3>
+        <p class="fb-kind">Deepublish</p>
+        <p>Performance-based seismic evaluation of reinforced concrete buildings: the methods of ATC-40, FEMA, Eurocode and ASCE 41, worked by hand and checked against computer analysis.</p>
+        <p class="fb-links"><a href="https://deepublishstore.com/produk/buku-teori-dan-praktik-evaluasi/" target="_blank" rel="noopener">Deepublish</a></p>
+      </div>
+    </li>
+    <li class="fb-work">
+      <span class="fb-idx"></span>
+      <div>
+        <h3>Teori dan Praktik Perancangan Struktur Gedung Tahan Gempa</h3>
+        <p class="fb-kind">Deepublish</p>
+        <p>The design of earthquake-resistant buildings, from theory to the practice of structural design.</p>
+        <p class="fb-links"><a href="https://deepublishstore.com/produk/buku-teori-dan-praktik-perancangan-struktur-gedung-tahan-gempa/" target="_blank" rel="noopener">Deepublish</a></p>
+      </div>
+    </li></ol>
+  </section>
+  </main>
+
+</body>
+</html>
