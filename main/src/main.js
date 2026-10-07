@@ -102,7 +102,7 @@ function boot() {
     document.body.classList.toggle('away', next.kind !== 'home');
     panel.hide();
     const narrow = isNarrow();
-    const showPanel = () => (next.kind === 'core' ? panel.showCore() : panel.showMemory(next.id));
+    const showPanel = reveal => (next.kind === 'core' ? panel.showCore(reveal) : panel.showMemory(next.id, reveal));
     const cut = fn => {
       // Reduced motion: no flight, a quick cut behind the veil.
       if (!reduced) return fn();
@@ -117,10 +117,19 @@ function boot() {
       selected = next.id; sim.send(k);
       target = memoryPose(worldOf(k + 1), worldOf(0), rig.pos, narrow);
     }
-    let mounted = false;
+    // The panel is built near the start of the flight, while the camera is
+    // still slow (after the old panel has faded), and slides in at 66%.
+    let built = false, shown = false;
     cut(() => rig.goTo(target, {
-      onProgress: t => { if (t >= 0.66 && !mounted) { mounted = true; showPanel(); } },
-      done: () => { if (!mounted) { mounted = true; showPanel(); } panel.focus(); },
+      onProgress: t => {
+        if (t >= 0.15 && !built) { built = true; showPanel(false); }
+        if (t >= 0.66 && !shown) { shown = true; panel.reveal(); }
+      },
+      done: () => {
+        if (!built) { built = true; showPanel(false); }
+        if (!shown) { shown = true; panel.reveal(); }
+        panel.focus();
+      },
     }));
   }
 
@@ -141,10 +150,8 @@ function boot() {
   // ---------- pointer: drag to orbit, click to think, wheel and pinch to travel ----------
   const canvas = document.getElementById('scene');
   const pointers = new Map();
-  let ptr = null, down = null, pinch0 = 0, attnT = 0;
+  let down = null, pinch0 = 0;
   canvas.addEventListener('pointermove', e => {
-    if (e.pointerType === 'mouse') ptr = { x: e.clientX, y: e.clientY };
-    rig.pointer((e.clientX / innerWidth) * 2 - 1, (e.clientY / innerHeight) * 2 - 1);
     const p = pointers.get(e.pointerId);
     if (!p) return;
     const dx = e.clientX - p.x, dy = e.clientY - p.y;
@@ -183,7 +190,6 @@ function boot() {
   };
   canvas.addEventListener('pointerup', up);
   canvas.addEventListener('pointercancel', up);
-  canvas.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { ptr = null; rig.pointer(0, 0); } });
   canvas.addEventListener('wheel', e => {
     e.preventDefault();
     if (rig.atHome) rig.dolly(Math.exp(e.deltaY * 0.0012));
@@ -264,8 +270,6 @@ function boot() {
       sim.step(dt, woke);
       // Quiet background life: a single small thought now and then.
       if (woke && (ambT += dt) > 2.2) { ambT = 0; const i = hud.randomVisible(sim.rand); if (i >= 0) sim.fire(i, 2); }
-      // Attention: the neuron under the cursor fires.
-      if (ptr && rig.atHome && !rig.dragging && (attnT += dt) > 0.28) { attnT = 0; const i = hud.pick(ptr.x, ptr.y, 90); if (i >= 0) sim.fire(i, 2); }
     }
 
     const sel = selected && selected !== 'core' ? memoryIds.indexOf(selected) : -1;
@@ -282,7 +286,6 @@ function boot() {
     const panelRect = panel.open && !rig.flying ? panel.el.getBoundingClientRect() : null;
     hud.draw(cam, sim, {
       dt, net: intro.wire, hover, selected: sel, panelRect: lastPanel, mask: intro.mask,
-      pointer: ptr && rig.atHome && !rig.dragging && introDone && !coarse ? ptr : null,
     });
     if (labelsDirty) { overlay.measured = false; labelsDirty = false; }
     overlay.update(hud.marks, {

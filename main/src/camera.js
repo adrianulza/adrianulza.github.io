@@ -1,21 +1,16 @@
 import * as THREE from 'three';
 
 // The camera rig. At home it orbits the red core from inside the network, slowly,
-// with the network streaming past in every direction. The visitor can drag to
-// orbit (with inertia) and scroll or pinch to move nearer or farther. Choosing
-// a memory flies the camera along a curved path to stand in front of it.
+// with the network streaming past in every direction. Only a drag (mouse held
+// down, or a finger) orbits it, with inertia; scroll or pinch moves nearer or
+// farther. Simply moving the mouse never moves the camera. Choosing a memory
+// flies the camera along a curved path to stand in front of it.
 
 const V = () => new THREE.Vector3();
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+// Zero speed and zero acceleration at both ends, so a flight starts and lands
+// without a jolt.
 const smootherstep = t => t * t * t * (t * (t * 6 - 15) + 10);
-const easeQuint = t => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2);
-
-// A critically damped spring: follows a target smoothly with no overshoot.
-function spring(cur, target, vel, omega, dt) {
-  const x = cur - target, e = Math.exp(-omega * dt);
-  const nv = (vel - omega * (vel + omega * x) * dt) * e;
-  return [target + (x + (vel + omega * x) * dt) * e, nv];
-}
 
 export class CameraRig {
   constructor({ narrow, reduced }) {
@@ -27,12 +22,12 @@ export class CameraRig {
     this.radiusTarget = this.radius;
     this.vTheta = 0; this.vPhi = 0;
     this.dragging = false; this.lastInput = -10;
-    this.px = 0; this.py = 0; this.pvx = 0; this.pvy = 0; this.tx = 0; this.ty = 0;
     this.flight = null;
     this.rest = null;             // when away: { pos, look, fov }
+    this.restT = 0;               // when the camera arrived at its rest
     this.time = 0;
-    this.swingT = 0;              // clock for the hero's slow sway
-    this.yawOff = 0; this.pitchOff = 0;
+    this.swingT = 0;              // clock for the slow sway
+    this.yawOff = 0;
     this.home(true);
   }
 
@@ -42,9 +37,6 @@ export class CameraRig {
   get atHome() { return !this.rest && !this.flight; }
 
   setNarrow(n) { this.narrow = n; if (this.atHome) this.radiusTarget = this.homeRadius; }
-
-  // Pointer position in -1..1 for parallax.
-  pointer(nx, ny) { this.tx = nx; this.ty = ny; }
 
   drag(dx, dy) {
     this.vTheta = -dx * 0.0052; this.vPhi = dy * 0.0042;
@@ -59,7 +51,7 @@ export class CameraRig {
   }
 
   orbitPose(outPos, outLook) {
-    const r = this.radius, th = this.theta + this.yawOff, ph = clamp(this.phi + this.pitchOff, -1.2, 1.2);
+    const r = this.radius, th = this.theta + this.yawOff, ph = clamp(this.phi, -1.2, 1.2);
     outPos.set(
       this.center.x + Math.cos(th) * Math.cos(ph) * r,
       this.center.y + Math.sin(ph) * r,
@@ -83,7 +75,7 @@ export class CameraRig {
     this.flight = {
       p0, p1: p0.clone().addScaledVector(dir, 0.33).add(side).add(lift), p2: p0.clone().addScaledVector(dir, 0.7).add(side.multiplyScalar(0.5)), p3,
       l0: this.look.clone(), l1: target.look.clone(), f0: this.fov, f1: target.fov,
-      t: 0, dur: clamp(1.3 + dist * 0.05, 1.4, 2.6), onProgress, done, fired: false,
+      t: 0, dur: clamp(1.7 + dist * 0.06, 1.9, 3), onProgress, done,
     };
   }
 
@@ -96,7 +88,7 @@ export class CameraRig {
     const off = this.pos.clone().sub(this.center);
     if (off.lengthSq() > 1) {
       this.theta = Math.atan2(off.z, off.x) - this.yawOff;
-      this.phi = clamp(Math.asin(clamp(off.y / off.length(), -1, 1)), -0.6, 0.6) - this.pitchOff;
+      this.phi = clamp(Math.asin(clamp(off.y / off.length(), -1, 1)), -0.6, 0.6);
     }
     this.radius = this.radiusTarget = this.homeRadius;
     const pos = V(), look = V();
@@ -106,35 +98,35 @@ export class CameraRig {
 
   update(dt, { paused }) {
     this.time += dt;
-    // Pointer parallax through a spring.
-    [this.px, this.pvx] = spring(this.px, this.tx, this.pvx, 3, dt);
-    [this.py, this.pvy] = spring(this.py, this.ty, this.pvy, 3, dt);
 
     if (this.flight) {
+      // One eased clock drives position, gaze and lens together, so the turn
+      // of the head never runs ahead of the travel.
       const F = this.flight;
       F.t = Math.min(1, F.t + dt / F.dur);
       const u = smootherstep(F.t), v = 1 - u;
       this.pos.set(0, 0, 0)
         .addScaledVector(F.p0, v * v * v).addScaledVector(F.p1, 3 * v * v * u)
         .addScaledVector(F.p2, 3 * v * u * u).addScaledVector(F.p3, u * u * u);
-      this.look.lerpVectors(F.l0, F.l1, easeQuint(F.t));
-      this.fov = F.f0 + (F.f1 - F.f0) * u + Math.sin(Math.PI * F.t) * 5;
+      this.look.lerpVectors(F.l0, F.l1, u);
+      this.fov = F.f0 + (F.f1 - F.f0) * u + Math.sin(Math.PI * u) * 3;
       F.onProgress?.(F.t);
-      if (F.t >= 1) { this.flight = null; F.done?.(); }
+      if (F.t >= 1) { this.flight = null; this.restT = this.time; F.done?.(); }
       return this.pose();
     }
 
     if (this.rest) {
-      // Resting in front of a memory: a slow breath of drift plus parallax.
-      const R = this.rest, t = this.time;
-      this.pos.copy(R.pos).add(new THREE.Vector3(Math.sin(t * 0.21) * 0.12, Math.sin(t * 0.17) * 0.08, 0));
+      // Resting in front of a memory: a slow breath of drift that fades in
+      // over 2.5 s after landing, so the arrival never jumps.
+      const R = this.rest, t = this.time - this.restT;
+      const a = smootherstep(clamp(t / 2.5, 0, 1));
+      this.pos.copy(R.pos).add(new THREE.Vector3(Math.sin(t * 0.21) * 0.12 * a, Math.sin(t * 0.17) * 0.08 * a, 0));
       this.look.copy(R.look);
       this.fov = R.fov;
-      return this.pose(0.25);
+      return this.pose();
     }
 
-    // Home: a slow sway. The view sways slowly from side to side
-    // (yaw = sin(t * 0.16) * 0.85) and the cursor steers it, eased at rate 2/s.
+    // Home: the view sways slowly from side to side (yaw = sin(t * 0.16) * 0.85).
     // A drag turns the whole orbit and keeps some inertia.
     if (!this.dragging) {
       const decay = Math.exp(-dt / 0.35);
@@ -142,25 +134,14 @@ export class CameraRig {
       this.theta += this.vTheta; this.phi = clamp(this.phi + this.vPhi, -1.05, 1.05);
     }
     if (!paused && !this.reduced) this.swingT += dt;
-    const k = Math.min(1, dt * 2);
-    const steerYaw = this.reduced ? 0 : -this.tx * 0.55, steerPitch = this.reduced ? 0 : this.ty * 0.3;
-    this.yawOff += (Math.sin(this.swingT * 0.16) * 0.85 + steerYaw - this.yawOff) * k;
-    this.pitchOff += (steerPitch - this.pitchOff) * k;
+    this.yawOff = this.reduced ? 0 : Math.sin(this.swingT * 0.16) * 0.85;
     this.radius += (this.radiusTarget - this.radius) * Math.min(1, dt * 4);
     this.orbitPose(this.pos, this.look);
     this.fov = this.homeFov;
-    return this.pose(0);
+    return this.pose();
   }
 
-  // Parallax is applied as a small offset of the look point, sideways and up.
-  pose(par = 0) {
-    const fwd = this.look.clone().sub(this.pos).normalize();
-    const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize();
-    const up = new THREE.Vector3().crossVectors(right, fwd);
-    const k = this.reduced ? 0 : par;
-    const look = this.look.clone().addScaledVector(right, this.px * 1.4 * k).addScaledVector(up, -this.py * 0.9 * k);
-    return { pos: this.pos, look, fov: this.fov };
-  }
+  pose() { return { pos: this.pos, look: this.look, fov: this.fov }; }
 }
 
 // Where to stand to look at a memory: outside it, facing back toward the core,

@@ -4,7 +4,6 @@ import { FOG_NEAR, FOG_FAR } from './scene.js';
 
 // The 2D layer over the WebGL canvas, drawn in the same marks as the network:
 //   signals    a 1.9 px head and a tail over the last 18% of the synapse
-//   attention  the cursor links to the 18 nearest points within 130 px
 
 const fogOf = d => 1 - Math.min(1, Math.max(0, (d - FOG_NEAR) / (FOG_FAR - FOG_NEAR)));
 
@@ -102,27 +101,6 @@ export class Hud {
         prev = cur;
       }
     });
-
-    // Attention: lines from the cursor to the nearest points (the hero samples every
-    // second point and keeps the 18 closest within 130 px).
-    if (st.pointer) {
-      const { x, y } = st.pointer, P = field.points, n = P.length / 3, near = [];
-      for (let i = 0; i < n; i += 3) {
-        this.near(P[i * 3], P[i * 3 + 1], P[i * 3 + 2], cam, w3);
-        const dx = w3[0] - cam.x, dy = w3[1] - cam.y, dz = w3[2] - cam.z, dd = dx * dx + dy * dy + dz * dz;
-        if (dd > FOG_NEAR * FOG_NEAR || dd < 12 || !this.scene.project(w3[0], w3[1], w3[2], p)) continue;
-        const d = Math.hypot(p[0] - x, p[1] - y);
-        if (d < 130) near.push([d, p[0], p[1]]);
-      }
-      near.sort((a, b) => a[0] - b[0]);
-      ctx.lineWidth = 0.7;
-      for (const [d, px, py] of near.slice(0, 18)) {
-        ctx.strokeStyle = rgba(this.col(px), (1 - d / 130) * 0.7);
-        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(px, py); ctx.stroke();
-      }
-      ctx.strokeStyle = rgba(mode.ink, 0.9); ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.arc(x, y, 5, 0, 6.283); ctx.stroke();
-    }
 
     // Signals.
     for (const q of sim.pulses) {

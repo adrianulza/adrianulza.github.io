@@ -33,9 +33,9 @@ export class Panel {
     </nav>`;
   }
 
-  showCore() {
+  showCore(reveal = true) {
     const p = this.person;
-    this.mount(`
+    this.mount(reveal, `
       <h2 class="r" style="--i:1" tabindex="-1">${esc(p.name)}</h2>
       <ul class="roles r" style="--i:3">${p.roles.map(r => `<li><strong>${esc(r.title)}</strong><span>${esc(r.org)}</span></li>`).join('')}</ul>
       <div class="interests r" style="--i:4"><p class="sub">Interests</p><ul>${p.interests.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>
@@ -43,7 +43,7 @@ export class Panel {
       ${this.rail(0)}`);
   }
 
-  showMemory(id) {
+  showMemory(id, reveal = true) {
     const i = this.memories.findIndex(m => m.id === id), m = this.memories[i];
     let body;
     if (m.id === 'publications') body = this.papersHtml();
@@ -52,7 +52,7 @@ export class Panel {
       ${m.media ? `<figure class="shot r" style="--i:3"><img src="${esc(this.root + m.media.src)}" alt="${esc(m.media.alt)}" loading="lazy" decoding="async"></figure>` : ''}
       <dl class="facts r" style="--i:4">${m.facts.map(f => `<div><dt>${esc(f.value)}</dt><dd>${esc(f.label)}</dd></div>`).join('')}</dl>
       ${linksHtml(m.links, 5)}`;
-    this.mount(`
+    this.mount(reveal, `
       <p class="eyebrow r" style="--i:0">${esc(m.kind)} · ${esc(m.year)}</p>
       <h2 class="r" style="--i:1" tabindex="-1">${esc(m.title)}</h2>
       <p class="pitch r" style="--i:2">${esc(m.pitch)}</p>
@@ -80,7 +80,7 @@ export class Panel {
       </article>`).join('')}</div>`;
   }
 
-  mount(html) {
+  mount(reveal, html) {
     clearTimeout(this.hideT);
     const el = this.el;
     el.classList.remove('in', 'out');
@@ -88,6 +88,13 @@ export class Panel {
     el.innerHTML = html;
     el.hidden = false;
     el.scrollTop = 0;
+    if (reveal) this.reveal();
+  }
+
+  // Slide the panel in. Building it (mount) is the costly part, so a flight
+  // builds it early, while the camera is still slow, and reveals it later.
+  reveal() {
+    const el = this.el;
     requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
   }
 
