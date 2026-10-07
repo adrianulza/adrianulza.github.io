@@ -73,11 +73,9 @@ body.grabbing #scene { cursor: grabbing; }
 body.away .lead { opacity: 0; transform: translateX(-12px); pointer-events: none; }
 body.away .lead .works { pointer-events: none; }
 
-/* The thesis: what the work is for, in one line. */
-.thesis { margin: 0; max-width: 26ch; font-size: 18px; font-weight: 300; line-height: 1.45; color: var(--ink2); animation: title-in 0.9s var(--ease-out) 0.24s both; }
 
 /* Selected work: the scan path. Each row is linked to its orb both ways. */
-.works { margin-top: clamp(20px, 4vh, 40px); pointer-events: auto; animation: title-in 0.9s var(--ease-out) 0.36s both; }
+.works { margin-top: 0; pointer-events: auto; animation: title-in 0.9s var(--ease-out) 0.36s both; }
 .worklist { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
 .worklist button { display: grid; grid-template-columns: 30px 1fr auto; align-items: baseline; gap: 10px; width: 100%; min-height: 34px; padding: 8px 0; text-align: left; border-bottom: 1px solid var(--rule); transition: border-color 0.3s var(--ease-out); }
 .worklist .wl-n { font-size: 10.5px; letter-spacing: 0.14em; color: var(--mid); font-variant-numeric: tabular-nums; transition: color 0.3s var(--ease-out); }
@@ -88,7 +86,7 @@ body.away .lead .works { pointer-events: none; }
 .worklist li.lit .wl-t, .worklist button:focus-visible .wl-t { transform: translateX(3px); }
 .worklist button:focus-visible { outline: none; }
 .worklist button:active .wl-t { transform: translateX(3px) scale(0.98); }
-@media (max-height: 760px) { .worklist .wl-k { display: none; } .thesis { font-size: 16px; margin-top: 12px; } .worklist button { min-height: 30px; padding: 6px 0; } }
+@media (max-height: 760px) { .worklist .wl-k { display: none; } .worklist button { min-height: 30px; padding: 6px 0; } }
 @keyframes title-in { from { opacity: 0; transform: translateY(10px); } }
 
 /* The first-moment nucleus (the core in SVG); it hands over to the 3D core. */
@@ -259,7 +257,6 @@ body.away .lead .works { pointer-events: none; }
   /* Phones: no title block; the network has the whole screen. */
   .lead { display: none; }
   .lead { top: calc(env(safe-area-inset-top, 0px) + 84px); right: var(--gutter); width: auto; }
-  .thesis { font-size: 15px; margin-top: 10px; }
   /* Phones: no works list; the network and its callouts carry the works. */
   .works { display: none; }
 

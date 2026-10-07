@@ -258,7 +258,7 @@ function boot() {
 
     // Reading mask: eases in as the panel opens and out as it closes; the last
     // rect is kept so the fade-out happens in the right place.
-    // At home, the same mask (softer) keeps the name, thesis and list legible.
+    // At home, the same mask (softer) keeps the list legible.
     const open = panel.open && panel.el.classList.contains('in');
     const home = state.kind === 'home' && awake && !rig.flying;
     if (open) lastPanel = panel.el.getBoundingClientRect();
