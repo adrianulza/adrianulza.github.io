@@ -36,7 +36,6 @@ export class Panel {
   showCore() {
     const p = this.person;
     this.mount(`
-      <p class="eyebrow r" style="--i:0">${esc(p.role)} · ${esc(p.place)}</p>
       <h2 class="r" style="--i:1" tabindex="-1">${esc(p.name)}</h2>
       <p class="formal r" style="--i:2">${esc(p.formal)}</p>
       <ul class="roles r" style="--i:3">${p.roles.map(r => `<li><strong>${esc(r.title)}</strong><span>${esc(r.org)}</span></li>`).join('')}</ul>
