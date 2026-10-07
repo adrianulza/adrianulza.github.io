@@ -65,12 +65,8 @@ export class CameraRig {
       this.center.y + Math.sin(ph) * r,
       this.center.z + Math.sin(th) * Math.cos(ph) * r,
     );
-    // Desktop: aim beside the core so it sits right of centre, leaving the left
-    // for the title. Phones have no title block, so the core stays centred.
-    const fwd = this.center.clone().sub(outPos).normalize();
-    const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize();
+    // The core sits at the centre of the screen.
     outLook.copy(this.center);
-    if (!this.narrow) outLook.addScaledVector(right, -r * 0.2);
     return outPos;
   }
 

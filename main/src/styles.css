@@ -68,26 +68,6 @@ a { color: inherit; }
 body.grabbing #scene { cursor: grabbing; }
 #hud { pointer-events: none; }
 
-/* ---------- title ---------- */
-.lead { position: fixed; z-index: 9; left: calc(var(--gutter) + 2px); top: max(104px, 17vh); width: min(440px, 34vw); pointer-events: none; transition: opacity 0.6s var(--ease-out), transform 0.8s var(--ease-out); }
-body.away .lead { opacity: 0; transform: translateX(-12px); pointer-events: none; }
-body.away .lead .works { pointer-events: none; }
-
-
-/* Selected work: the scan path. Each row is linked to its orb both ways. */
-.works { margin-top: 0; pointer-events: auto; animation: title-in 0.9s var(--ease-out) 0.36s both; }
-.worklist { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
-.worklist button { display: grid; grid-template-columns: 30px 1fr auto; align-items: baseline; gap: 10px; width: 100%; min-height: 34px; padding: 8px 0; text-align: left; border-bottom: 1px solid var(--rule); transition: border-color 0.3s var(--ease-out); }
-.worklist .wl-n { font-size: 10.5px; letter-spacing: 0.14em; color: var(--mid); font-variant-numeric: tabular-nums; transition: color 0.3s var(--ease-out); }
-.worklist .wl-t { font-size: 14px; font-weight: 450; color: var(--ink); transition: transform 0.3s var(--ease-out); }
-.worklist .wl-k { font-size: 12px; color: var(--callout-k); white-space: nowrap; }
-.worklist li.lit button, .worklist button:focus-visible { border-bottom-color: var(--red); }
-.worklist li.lit .wl-n, .worklist button:focus-visible .wl-n { color: var(--red); }
-.worklist li.lit .wl-t, .worklist button:focus-visible .wl-t { transform: translateX(3px); }
-.worklist button:focus-visible { outline: none; }
-.worklist button:active .wl-t { transform: translateX(3px) scale(0.98); }
-@media (max-height: 760px) { .worklist .wl-k { display: none; } .worklist button { min-height: 30px; padding: 6px 0; } }
-@keyframes title-in { from { opacity: 0; transform: translateY(10px); } }
 
 /* The first-moment nucleus (the core in SVG); it hands over to the 3D core. */
 .nucleus { position: fixed; left: 0; top: 0; z-index: 8; width: var(--size, 120px); height: var(--size, 120px); pointer-events: none; transition: opacity 0.5s var(--ease-out); animation: nucleus-in 0.7s var(--ease-out) 0.15s both; }
@@ -170,7 +150,6 @@ body.away .lead .works { pointer-events: none; }
 .panel .eyebrow { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 0; font-size: 11px; font-weight: 400; letter-spacing: 0.26em; text-transform: uppercase; color: var(--mid); }
 .panel h2 { margin: 0; font-size: clamp(38px, min(4.6vw, 8vh), 74px); font-weight: 400; line-height: 1; letter-spacing: -0.005em; text-wrap: balance; }
 .panel h2:focus { outline: none; }
-.panel .formal { margin: -4px 0 0; font-size: 17px; color: var(--mid); }
 .panel .pitch { max-width: 38ch; margin: 0; font-size: clamp(17px, 1.35vw, 20px); font-weight: 400; line-height: 1.5; color: var(--ink2); }
 .panel .roles { display: grid; gap: 14px; margin: 0; padding: 18px 0 0; list-style: none; border-top: 1px solid var(--rule); }
 .panel .roles li { display: grid; gap: 3px; }
@@ -254,11 +233,6 @@ body.away .lead .works { pointer-events: none; }
 
 /* ---------- phones ---------- */
 @media (max-width: 700px) {
-  /* Phones: no title block; the network has the whole screen. */
-  .lead { display: none; }
-  .lead { top: calc(env(safe-area-inset-top, 0px) + 84px); right: var(--gutter); width: auto; }
-  /* Phones: no works list; the network and its callouts carry the works. */
-  .works { display: none; }
 
   .panel {
     top: auto; right: 0; width: auto; max-height: 62dvh;
@@ -290,7 +264,7 @@ body.away .lead .works { pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .panel.in .r { transition-duration: 10ms; transition-delay: 0s; }
-  .lead, .mem-btn .callout, .veil { transition-duration: 0.2s; }
+  .mem-btn .callout, .veil { transition-duration: 0.2s; }
   .nucleus, .nucleus .n-arc { animation: none; }
   .nucleus .n-a1 { stroke-dasharray: 31 100; } .nucleus .n-a2 { stroke-dasharray: 13 100; }
 }

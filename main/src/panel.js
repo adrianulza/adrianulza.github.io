@@ -37,7 +37,6 @@ export class Panel {
     const p = this.person;
     this.mount(`
       <h2 class="r" style="--i:1" tabindex="-1">${esc(p.name)}</h2>
-      <p class="formal r" style="--i:2">${esc(p.formal)}</p>
       <ul class="roles r" style="--i:3">${p.roles.map(r => `<li><strong>${esc(r.title)}</strong><span>${esc(r.org)}</span></li>`).join('')}</ul>
       <div class="interests r" style="--i:4"><p class="sub">Interests</p><ul>${p.interests.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>
       ${linksHtml(p.links, 5)}

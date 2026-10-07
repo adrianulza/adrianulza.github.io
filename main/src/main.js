@@ -55,7 +55,6 @@ function boot() {
 
   const rig = new CameraRig({ narrow: isNarrow(), reduced });
   const veil = document.querySelector('[data-veil]');
-  const leadEl = document.querySelector('.lead');
 
   // ---------- state ----------
   let state = { kind: 'home' }, hover = null, paused = reduced, selected = null;
@@ -80,13 +79,6 @@ function boot() {
   function attend(k) { hover = k; sim.send(k); sim.fire(field.neuronCount + 1 + k, 2, true); }
 
   // ---------- the works list (the scan path) ----------
-  const listEl = document.querySelector('[data-worklist]');
-  listEl.innerHTML = memories.map((m, i) => `<li><button type="button" data-k="${i}"><span class="wl-n">${String(i + 1).padStart(2, '0')}</span><span class="wl-t">${m.title}</span><span class="wl-k">${m.kind} · ${m.year}</span></button></li>`).join('');
-  const rows = [...listEl.children];
-  listEl.addEventListener('click', e => { const b = e.target.closest('[data-k]'); if (b) go({ kind: 'memory', id: memories[+b.dataset.k].id }); });
-  for (const ev of ['pointerover', 'focusin']) listEl.addEventListener(ev, e => { const b = e.target.closest('[data-k]'); if (b && ready && hover !== +b.dataset.k) attend(+b.dataset.k); });
-  for (const ev of ['pointerleave', 'focusout']) listEl.addEventListener(ev, () => { hover = null; });
-  let litRows = '';
 
   const worldOf = i => new THREE.Vector3(...hud.marks[i].world);
 
@@ -258,12 +250,9 @@ function boot() {
 
     // Reading mask: eases in as the panel opens and out as it closes; the last
     // rect is kept so the fade-out happens in the right place.
-    // At home, the same mask (softer) keeps the list legible.
     const open = panel.open && panel.el.classList.contains('in');
-    const home = state.kind === 'home' && awake && !rig.flying;
     if (open) lastPanel = panel.el.getBoundingClientRect();
-    else if (home) { const r = leadEl.getBoundingClientRect(); lastPanel = r.width ? { left: r.left - 24, top: r.top - 24, right: r.right + 24, bottom: r.bottom + 24 } : null; }
-    maskV += ((open ? 1 : home && lastPanel ? 0.7 : 0) - maskV) * Math.min(1, dt * 5);
+    maskV += ((open ? 1 : 0) - maskV) * Math.min(1, dt * 5);
     intro.panelRect = lastPanel; intro.mask = lastPanel ? maskV : 0;
 
     const cam = pose.pos;
@@ -299,11 +288,8 @@ function boot() {
     overlay.update(hud.marks, {
       quiet: state.kind !== 'home' || rig.flying, selectedId: selected, w: innerWidth, h: innerHeight,
       panelRect, intro: !awake,
-      leadRect: state.kind === 'home' ? leadEl.getBoundingClientRect() : null, narrow: isNarrow(), hover,
+      narrow: isNarrow(), hover,
     });
-    // A row lights while its work is attended, or briefly when a thought arrives at its orb.
-    const lit = rows.map((_, i) => (hover === i || sim.memLit[i] > 0.35 ? 1 : 0)).join('');
-    if (lit !== litRows) { litRows = lit; rows.forEach((r, i) => r.classList.toggle('lit', lit[i] === '1')); }
 
     // Adaptive quality: if the median frame is slow, step down once, then again.
     if (introDone && !paused && quality < 2 && skip-- <= 0) {

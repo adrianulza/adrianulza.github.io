@@ -51,15 +51,14 @@ export class Overlay {
   }
 
   // marks: screen state from the Hud. quiet hides labels (away or flying).
-  update(marks, { quiet, selectedId, hover, w, h, panelRect, intro, leadRect, narrow }) {
+  update(marks, { quiet, selectedId, hover, w, h, panelRect, intro, narrow }) {
     if (!this.measured) this.measure();
     this.root.classList.toggle('quiet', quiet);
     this.root.classList.toggle('intro', intro);
     this.root.classList.toggle('narrow', narrow);
 
-    // Areas no callout may enter: the left column and the screen edges.
-    const pad = 16, blocked = [];
-    if (leadRect) blocked.push({ l: leadRect.left - pad, t: leadRect.top - pad, r: leadRect.right + pad, b: leadRect.bottom + pad });
+    // Callouts stay inside the screen edges.
+    const pad = 16;
     const hits = (q, list) => list.some(o => q.l < o.r && q.r > o.l && q.t < o.b && q.b > o.t);
     const top = 24, bottom = 24;
     // The core's label (the name) may come closer to the edge, so it fits on a phone.
@@ -97,7 +96,7 @@ export class Overlay {
         return { dx, dy, sx, sy, left, topY, q: { l: m.x + left, r: m.x + left + it.bw, t: m.y + topY, b: m.y + topY + it.bh } };
       };
       // The core carries the name, so it may sit over an orb; works must keep clear.
-      const free = g => inside(g.q, it.kind === 'core' ? 6 : pad) && !hits(g.q, blocked) && !hits(g.q, placed) && (it.kind === 'core' || !hits(g.q, others));
+      const free = g => inside(g.q, it.kind === 'core' ? 6 : pad) && !hits(g.q, placed) && (it.kind === 'core' || !hits(g.q, others));
       let pick = null;
       for (const [dx, dy] of tries) { const g = geom(dx, dy); if (free(g)) { pick = g; break; } }
       // Debounce showing and hiding: a label hides only after 12 blocked frames

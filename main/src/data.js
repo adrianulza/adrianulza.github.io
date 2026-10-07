@@ -2,7 +2,6 @@
 
 export const person = {
   name: 'Adrian Ulza',
-  formal: 'Ir. Adrian Ulza, S.T., M.Sc.',
   role: 'Structural engineer',
   place: 'Banda Aceh, Indonesia',
   roles: [
